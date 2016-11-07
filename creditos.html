@@ -7,6 +7,7 @@
 					<script src="js/jquery-3.1.1.min.js"></script>
 		<title>Créditos</title>
 		<script src="//maps.google.com/maps/api/js?sensor=false"></script>
+	
 <script type="text/javascript">
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(mostrarUbicacion);
@@ -66,6 +67,50 @@ function showError(error)
   
 </script>
 
+<!-- EL tiempo -->
+<script>
+	var ip="";
+	var uri="";
+	var my_key="15e42b3b308f4dd788d192022160611";
+	var no_of_days=0;//solo hoy
+	//var my_city="Washington,USA";
+$(document).ready(function()
+{
+
+	$.getJSON("http://jsonip.com/?callback=?", function (data) {
+        console.log(data);
+        ip=data.ip;
+		$('#city').html(ip);
+    });
+	// uri=tiempo uri2=hora local:
+	var uri2="http://api.worldweatheronline.com/free/v2/tz.ashx?";
+	});
+
+function getTiempo(){
+
+uri="http://api.worldweatheronline.com/premium/v1/weather.ashx?q="+ip+"&key="+my_key+"&format=xml&showmap=yes&lang=es&showlocaltime=yes&no_of_days="+no_of_days+"&includeLocation=yes";
+
+				$.post(uri, {}, function(data) {
+				
+					//$("#city").html("<pre>"+data+"</pre>");
+				$("#city").html("<pre>"+$(data).find('region').text()+"</pre>");
+				var region=$(data).find('region').text();
+				var iconurl=$(data).find('weatherIconUrl').first().text();
+				var resumen=$(data).find('lang_es').first().text();
+				var temp_c=$(data).find('temp_C').text();
+				var localtime=$(data).find('localtime').text();
+				$("#city").html("<h5>"+region+" "+localtime+"<br>Temperatura="+temp_c+" C <br>"+resumen+"</h5> <img src='"+iconurl+"'>");
+		
+				
+				}).fail(function(response) {
+					$("#city").html('Error getWealth = ' +response.responseText);
+					});
+   
+ 
+	}
+
+
+</script>
 
 
 	</head>
@@ -76,10 +121,10 @@ function showError(error)
 		<br>
 <table>
 <tr>
-<div id="city">Ciudad</div>
+<div id="city" style="background-color: rgba(164, 157, 157, 0.5);width:23%">Ciudad</div>
 <div id="coord" style="background:lightblue">
 <input type="button" id="coordB" onClick="refrescarUbicacion()" value="Mas Info">
-<input type="button" id="servB" onClick="detallesJSON()" value="JSON del APIRest">
+<input type="button" id="servB" onClick="getTiempo()" value="Tiempo Local">
 <div id="resp"></div>
 </div>
 </tr><tr>
