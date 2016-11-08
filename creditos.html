@@ -26,7 +26,8 @@ function refrescarUbicacion() {
 
                 
 <script>
-
+var lat="";
+var lon="";
 
 navigator.geolocation.getCurrentPosition(showPosition,showError);
 function showPosition(position)
@@ -37,7 +38,7 @@ function showPosition(position)
   mapholder=document.getElementById('mapholder')
   mapholder.style.height='250px';
   var myOptions={
-  center:latlon,zoom:10,
+  center:latlon,zoom:13,
   mapTypeId:google.maps.MapTypeId.ROADMAP,
   mapTypeControl:false,
   navigationControlOptions:{style:google.maps.NavigationControlStyle.SMALL}
@@ -73,6 +74,7 @@ function showError(error)
 	var uri="";
 	var my_key="15e42b3b308f4dd788d192022160611";
 	var no_of_days=0;//solo hoy
+
 	//var my_city="Washington,USA";
 $(document).ready(function()
 {
@@ -86,20 +88,27 @@ $(document).ready(function()
 	var uri2="http://api.worldweatheronline.com/free/v2/tz.ashx?";
 	});
 
-function getTiempo(){
+function getTiempo(tipo){
 
+if(tipo=='ip')
 uri="http://api.worldweatheronline.com/premium/v1/weather.ashx?q="+ip+"&key="+my_key+"&format=xml&showmap=yes&lang=es&showlocaltime=yes&no_of_days="+no_of_days+"&includeLocation=yes";
-
+else if(tipo=='coord')
+uri="http://api.worldweatheronline.com/premium/v1/weather.ashx?q="+lat+","+lon+"&key="+my_key+"&format=xml&showmap=yes&lang=es&showlocaltime=yes&no_of_days="+no_of_days+"&includeLocation=yes";
+else
+uri="http://api.worldweatheronline.com/premium/v1/weather.ashx?q="+document.getElementById('ciudad').value+"&key="+my_key+"&format=xml&showmap=yes&lang=es&showlocaltime=yes&no_of_days="+no_of_days+"&includeLocation=yes";
+//alert(uri);
 				$.post(uri, {}, function(data) {
 				
 					//$("#city").html("<pre>"+data+"</pre>");
 				$("#city").html("<pre>"+$(data).find('region').text()+"</pre>");
 				var region=$(data).find('region').text();
+				var area=$(data).find('areaName').text();
+				
 				var iconurl=$(data).find('weatherIconUrl').first().text();
 				var resumen=$(data).find('lang_es').first().text();
 				var temp_c=$(data).find('temp_C').text();
 				var localtime=$(data).find('localtime').text();
-				$("#city").html("<h5>"+region+" "+localtime+"<br>Temperatura="+temp_c+" C <br>"+resumen+"</h5> <img src='"+iconurl+"'>");
+				$("#city").html("<h5>"+region+" "+area+ " "+localtime+"<br>Temperatura="+temp_c+" C <br>"+resumen+"</h5> <img src='"+iconurl+"'>");
 		
 				
 				}).fail(function(response) {
@@ -124,7 +133,10 @@ uri="http://api.worldweatheronline.com/premium/v1/weather.ashx?q="+ip+"&key="+my
 <div id="city" style="background-color: rgba(164, 157, 157, 0.5);width:23%">Ciudad</div>
 <div id="coord" style="background:lightblue">
 <input type="button" id="coordB" onClick="refrescarUbicacion()" value="Mas Info">
-<input type="button" id="servB" onClick="getTiempo()" value="Tiempo Local">
+<input type="button" id="servB" onClick="getTiempo('ip')" value="Tiempo Local Ip">
+<input type="button" id="servBc" onClick="getTiempo('coord')" value="Tiempo Local corrdenadas">
+Ciudad:<input type="text" id="ciudad">
+<input type="button" id="servBc" onClick="getTiempo('ciudad')" value="Tiempo ciudad">
 <div id="resp"></div>
 </div>
 </tr><tr>

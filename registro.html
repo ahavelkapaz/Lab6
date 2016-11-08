@@ -4,53 +4,55 @@
 		<meta http-equiv="Content-Type" content="text/html;charset="text/html;charset=iso-8859-15">
 		<script src="js/jquery-3.1.1.min.js"></script>
 		<script>
-			var loadFile = function(event) {
-				var output = document.getElementById('output');
-				output.src = URL.createObjectURL(event.target.files[0]);
-			};
-			
-			//Jquery functions
-			$(document).ready(function(){
-			//$("#emaildiv").html("<h5>Jquery Loaded</h5>");
-			
-				$('#selectoptions').on('change',function(){
-					if( $(this).val()==="Otros")
-					{
-						$(".hideme").show("slow")
-					} else {
-						$(".hideme").hide()
-					}
-				}).change();
-				
-				//Comprobaciones webService Password y email
-				//EMAIL
-				$("#email").focus(function() {}).blur(function() {
-					if($('#email').val().length>0)
-					{
-						$("#emaildiv").html("<img src='img/loading.gif'/>");
-						$.post("functions.php", {op: "emailSOAP",email:$('#email').val()}, function(data) {					
-							$("#emaildiv").html(data);					
-						}).fail(function(response) {
-							$("#emailvid").html('Error email SOAP = ' +response.responseText);
-						});
-					}
-				});
-				
-				//PASSWORD
-				$("#password").focus(function() {}).blur(function() {
-					if($('#password').val().length>0 && !isNaN($('#ticket').val()) && $('#ticket').val().length==4) 
-					{
-						$("#passdiv").html("<img src='img/loading.gif'/>");
-						$.post("functions.php", {op: "passSOAP",pass:$('#password').val(),ticket:$('#ticket').val()}, function(data) {					
-							$("#passdiv").html(data);					
-						}).fail(function(response) {
-							$("#passdiv").html('Error pass SOAP = ' +response.responseText);
-						});
-					}
-				});
-				
-			}); 
+		var loadFile = function(event) {
+			var output = document.getElementById('output');
+			output.src = URL.createObjectURL(event.target.files[0]);
+		};
 		
+		//Jquery functions
+		$(document).ready(function(){
+		//$("#emaildiv").html("<h5>Jquery Loaded</h5>");
+		
+			$('#selectoptions').on('change',function(){
+				if( $(this).val()==="Otros")
+				{
+					$(".hideme").show("slow")
+				} else {
+					$(".hideme").hide()
+				}
+			}).change();
+			
+			//Comprobaciones webService Password y email
+			//EMAIL
+			$("#email").focus(function() {
+			}).blur(function() {
+				if($('#email').val().length>0){
+				$("#emaildiv").html("<img src='img/loading.gif'/>");
+				$.post("functions.php", {op: "emailSOAP",email:$('#email').val()}, function(data) {
+				
+				$("#emaildiv").html(data);
+				
+				}).fail(function(response) {
+					$("#emailvid").html('Error email SOAP = ' +response.responseText);
+					});
+					}
+			});
+			//PASSWORD
+			$("#password").focus(function() {
+			}).blur(function() {
+				if($('#password').val().length>0 && !isNaN($('#ticket').val()) && $('#ticket').val().length==4){
+				$("#passdiv").html("<img src='img/loading.gif'/>");
+				$.post("functions.php", {op: "passSOAP",pass:$('#password').val(),ticket:$('#ticket').val()}, function(data) {
+				
+				$("#passdiv").html(data);
+				
+				}).fail(function(response) {
+					$("#passdiv").html('Error pass SOAP = ' +response.responseText);
+					});
+					}
+			});
+			
+		}); 
 		</script>
 		
 	</head>
