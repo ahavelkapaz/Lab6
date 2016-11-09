@@ -14,26 +14,24 @@ $server->wsdl->schemaTargetNamespace=$ns;
 $server->register('comprobarPass',array('x'=>'xsd:string','y'=>'xsd:string'),array('z'=>'xsd:string'),$ns);
 
 //implementamos la función
-function comprobarPass($x,$y)
-{
-	if($y!='7777') //Se crearia una tabla en la BD con tickets activos y consultariamos en ella
-	{
+function comprobarPass($x,$y){
+	if($y!='7777'){//Se crearia una tabla en la BD con tickets activos y consultariamos en ella
 		return 'USUARIO NO AUTORIZADO';
 	}
 	$handle = fopen('toppasswords.txt', 'r');
 	$encontrado = false;
-	while (($buffer = fgets($handle)) !== false)
-	{
-		if (strpos($buffer, $x) !== false) 
-		{
+	while (($buffer = fgets($handle)) !== false) {
+		if (trim($buffer)==$x) {
 			$encontrado = true;
 			break;
 		}      
 	}
 	fclose($handle);
 
+
 	if($encontrado) return 'INVALIDA';
-	else return 'VALIDA';
+		else return 'VALIDA';
+	
 }
 //llamamos al método service de la clase nusoap
 $HTTP_RAW_POST_DATA = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '';
